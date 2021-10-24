@@ -96,8 +96,8 @@ sc = SerialComms.SerialComms(com_port, baud_rate)
 
 # Open the serial connection
 def open_connection(sc):
-    sc.setcom_port(com_port)
-    sc.setbaud_rate(baud_rate)
+    sc.setCOMPort(com_port)
+    sc.setBaudrate(baud_rate)
     sc.open()
 
 # Close the serial connection
@@ -140,10 +140,10 @@ def set_load_brightness(brightness):
 # Toggle the battery charging
 def toggle_charging(is_charging):
     if (sc.isOpen == True):
-        # If load is connected: disconnect load
+        # If overcharge is connected: disconnect
         if (is_charging):
             sc.send("OV1")
-        # If load is not connected: connect load
+        # If overcharge is not connected: connect
         elif (not is_charging):
             sc.send("OV0")
         
@@ -180,8 +180,8 @@ def receive_message():
 
 
 # Serial refresh rate
-def updaterefresh_rate():
-    if (refresh_rate >= 1 and sc.isOpen == True):
+def update_refresh_rate():
+    if (refresh_rate >= 10 and sc.isOpen == True):
         sc.send("RR-" + str(int(refresh_rate)))
 
 
@@ -268,7 +268,7 @@ def main():
             val = values["-REFRESH RATE-"]
             if (val != ""):
                 refresh_rate = int(val)
-                updaterefresh_rate()
+                update_refresh_rate()
 
         # Toggle the connection
         if (event == "-TOGGLE CONNECTION-"):
