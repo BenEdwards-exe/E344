@@ -17,18 +17,11 @@ import PySimpleGUI as sg
 from serial import SerialException
 
 
-import matplotlib.pyplot as plt
-
-import time
-
-
-start_time = time.time()
-
 is_show_plot = False
 
 com_port = 'COM9'
 baud_rate = 9600
-refresh_rate = 500
+refresh_rate = 1000
 
 supply_voltage = 0.0
 battery_voltage = 0.0
@@ -41,52 +34,6 @@ battery_voltage_data = []
 battery_current_data = []
 ambientLightData = []
 plot_time = []
-
-
-fig, ((ax_ambient, ax_supply), (ax_battery_voltage, ax_battery_current)) = plt.subplots(nrows=2, ncols=2)
-fig.tight_layout(pad=2.0)
-
-ax_ambient.set_title("Ambient Light Level")
-ax_ambient.set_xlabel("Time (s)")
-ax_ambient.set_ylabel("Percentage Light(%)")
-
-
-
-def animate_plot():
-    global ax, start_time
-    plot_time.append(time.time() - start_time)
-
-    if (plot_time[-1] - plot_time[0] > 20):
-        plot_time.pop(0)
-        ambientLightData.pop(0)
-        supply_voltage_data.pop(0)
-        battery_voltage_data.pop(0)
-        battery_current_data.pop(0)
-
-
-
-    ax_ambient.clear()
-    ax_supply.clear()
-    ax_battery_voltage.clear()
-    ax_battery_current.clear()
-
-
-
-
-
-    
-    ax_ambient.set_xlim([plot_time[0]-2, plot_time[0]+25])
-    ax_supply.set_xlim([plot_time[0]-2, plot_time[0]+25])
-    ax_battery_voltage.set_xlim([plot_time[0]-2, plot_time[0]+25])
-    ax_battery_current.set_xlim([plot_time[0]-2, plot_time[0]+25])
-
-    ax_ambient.set_ylim([0, 100])
-
-    ax_ambient.plot(plot_time, ambientLightData)
-
-    plt.ion()
-    plt.show()
-    
 
 
 
@@ -158,14 +105,6 @@ def update_measurements(message_array: list):
     supply_voltage = split_message[2]
     battery_current = split_message[3]
     ambient_light_level = split_message[4]
-
-    # Update plot data if plot is shown
-    if (is_show_plot):
-        ambientLightData.append(int(ambient_light_level))
-        supply_voltage_data.append(float(supply_voltage))
-        battery_current_data.append(float(battery_current))
-        battery_voltage_data.append(float(supply_voltage))
-        animate_plot()
 
 
     
@@ -299,13 +238,6 @@ def main():
         receive_message()
 
         update_measurements_display(window)
-
-
-
-
-
-        
-        
 
     window.close()
 

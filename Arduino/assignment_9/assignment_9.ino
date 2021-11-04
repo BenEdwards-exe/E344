@@ -2,8 +2,6 @@
 // 22738002
 // October 2021
 
-#include "Keyboard.h"
-
 
 const int ovPin = 10; // Overcharge Pin
 const int batteryVoltagePin = 0; // Battery Voltage Pin
@@ -42,11 +40,9 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
 
-  /// Serial Setup ///
   // open the serial port:
   Serial.begin(9600);
-  // initialize control over the keyboard:
-  Keyboard.begin();
+
 
   // initialize pins
   pinMode(ovPin, OUTPUT);
